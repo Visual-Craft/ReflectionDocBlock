@@ -228,7 +228,13 @@ final class DocBlockFactory implements DocBlockFactoryInterface
 
         $result = $this->splitTagBlockIntoTagLines($tags);
         foreach ($result as $key => $tagLine) {
-            $result[$key] = $this->tagFactory->create(trim($tagLine), $context);
+            try {
+                $tag = $this->tagFactory->create(trim($tagLine), $context);
+            } catch (\InvalidArgumentException $e) {
+                continue;
+            }
+
+            $result[$key] = $tag;
         }
 
         return $result;
